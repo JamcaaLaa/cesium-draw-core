@@ -1,0 +1,54 @@
+{
+	"type": "module",
+	"name": "cesium-draw-core",
+	"author": {
+		"name": "openspacing"
+	},
+	"packageManager": "pnpm@6.30.0+",
+	"repository": {
+		"github": "https://github.com/openspacing/cesium-draw-core"
+	},
+	"keywords": [
+		"cesium",
+		"draw",
+		"tool"
+	],
+	"scripts": {
+		"demo": "vite",
+		"demo:build": "vite build",
+		"demo:preview": "vite preview",
+		"prepare": "husky install"
+	},
+	"dependencies": {
+		"cesium": "^1.91.0",
+		"milligram": "^1.4.1",
+		"rollup": "^2.69.0",
+		"vite-plugin-html-config": "^1.0.8"
+	},
+	"devDependencies": {
+		"@types/node": "^17.0.21",
+		"husky": "^7.0.0",
+		"lint-staged": "^12.3.4",
+		"prettier": "^2.5.1",
+		"typescript": "^4.6.2",
+		"vite": "^2.8.6",
+		"vite-plugin-externals": "^0.4.0"
+	},
+	"exports": {
+		".": {
+			"import": "./build/esm/index.js",
+			"require": "./build/cjs/index.js"
+		}
+	},
+	"lint-staged": {
+		"vite.config.ts": [
+			"prettier --write"
+		],
+		"src/**/*.{ts,js,json,css}": [
+			"prettier --write"
+		],
+		"demo/**/*.{ts,js,json,css}": [
+			"prettier --write"
+		]
+	}
+}
