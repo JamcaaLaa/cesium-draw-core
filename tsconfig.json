@@ -8,13 +8,15 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
+    "declaration": true,
+    "declarationDir": "types",
+    "outDir": "./dist",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["./src", "./demo", "./vite.config.ts"]
+  "include": ["./src", "./demo", "./vite.config.ts", "./rollup.config.ts"]
 }

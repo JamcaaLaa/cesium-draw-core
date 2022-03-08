@@ -19,7 +19,7 @@ const createUI = () => {
   return ul
 }
 
-enum DrawMode {
+export enum DrawMode {
   Point,
   Line,
   Polygon
