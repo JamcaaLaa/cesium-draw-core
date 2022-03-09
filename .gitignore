@@ -101,3 +101,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+demo/public/Assets/**/*
+demo/public/Widgets/**/*
+demo/public/Workers/**/*
+demo/public/ThirdParty/**/*
+demo/public/Scene/**/*
+demo/public/Cesium.d.ts
+demo/public/Cesium.js
+demo/public/Cesium.js.map

@@ -27,7 +27,8 @@
 		"build": "rollup --config rollup.config.ts --configPlugin typescript --environment ismin:yes",
 		"build:fordebug": "rollup --config rollup.config.ts --configPlugin typescript --environment ismin:no",
 		"static-copy": "gulp static-copy",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"postinstall": "gulp static-copy"
 	},
 	"dependencies": {
 		"milligram": "^1.4.1"
