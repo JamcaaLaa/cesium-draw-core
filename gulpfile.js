@@ -17,11 +17,11 @@ const deleteTargets = [
 
 const staticCopyTask = () => {
   del(deleteTargets.map((src) => `./demo/public/${src}`))
+  
+  const baseDir = `./node_modules/cesium/Build/CesiumUnminified`
 
   return gulp
-    .src(`./node_modules/cesium/Build/CesiumUnminified/**/*`, {
-      ignore: ['Scene']
-    })
+    .src([`${baseDir}/!(Scene)/**/*`, `${baseDir}/Cesium*`])
     .pipe(gulp.dest('./demo/public'))
 }
 staticCopyTask.displayName = 'static-copy'
