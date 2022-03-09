@@ -7,7 +7,7 @@ import {
 } from 'cesium'
 import './main.css'
 // import 'cesium/Source/Widgets/widgets.css'
-import { Draw } from '@/index'
+import { Draw, DrawMode } from '@/index'
 
 type DemoDebugging = {
   namespace: any
@@ -15,13 +15,15 @@ type DemoDebugging = {
 }
 
 const container = document.getElementById('cesium-container')
-const CESIUM: DemoDebugging = {
+const DEMO: DemoDebugging = {
   namespace: Cesium,
   viewer: null
 }
 
 const onContentLoaded = () => {
-  CESIUM.viewer = new Viewer(container as Element, {
+  const credits = document.createElement('div')
+  credits.style.display = 'none'
+  DEMO.viewer = new Viewer(container as Element, {
     animation: false,
     timeline: false,
     geocoder: false,
@@ -31,15 +33,22 @@ const onContentLoaded = () => {
     navigationHelpButton: false,
     fullscreenButton: false,
     infoBox: false,
+    creditContainer: credits,
     imageryProvider: new ArcGisMapServerImageryProvider({
       url: `https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer`
-    })
+    }),
+    msaaSamples: 2,
+    selectionIndicator: false,
+    contextOptions: {
+      requestWebgl2: true
+    }
   })
 
-  return CESIUM.viewer
+  return DEMO.viewer
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 默认定位到中国上空
   Camera.DEFAULT_VIEW_RECTANGLE = Rectangle.fromDegrees(
     75.0, // 东
     0.0, // 南
@@ -47,13 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
     60.0 // 北
   )
   Object.defineProperties(window, {
-    CESIUM: {
-      value: CESIUM
+    DEMO: {
+      value: DEMO
     },
     CESIUM_BASE_URL: {
       value: import.meta.env.VITE_CESIUM_BASE_URL
     }
   })
 
-  new Draw(onContentLoaded())
+  const draw = new Draw(onContentLoaded(), DrawMode.None)
+  Object.defineProperty(window, 'TEST_DRAW', {
+    value: draw
+  })
 })

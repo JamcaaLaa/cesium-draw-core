@@ -33,6 +33,25 @@ new Draw(viewer, {
 
 当前仅使用 gulp 来进行 CesiumJS 静态资源文件复制，用来做开发时调试，复制的是未压缩版本。参考 `./gulpfile.js`.
 
+## 打开测试
+
+``` sh
+pnpm demo
+```
+
+## 打包此插件
+
+``` sh
+pnpm build
+```
+
+## 更新 Cesium 后复制并更新静态文件
+
+``` sh
+pnpm static-copy
+```
+
+
 # 环境变量说明
 
 - VITE_CESIUM_BASE_URL，字符串，`CesiumJS` 在开发模式与生产模式读取静态资源的 `HTTP/S` 路径，后续考虑改为 CDN 而不是 `/public` 目录。记录在 `.env` 文件中。
