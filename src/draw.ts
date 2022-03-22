@@ -1,4 +1,5 @@
 import { Viewer, ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium'
+import { worldToDeg } from './utils'
 import { DrawMode } from './types'
 import type {
   LineSetupOption,
@@ -31,8 +32,36 @@ const createUI = (drawInstance: Draw) => {
   return ul
 }
 
-const leftClickCallback: CesiumLeftClickCallBack = ({ position }) => {
-  console.log(position)
+const leftClickCallback: CesiumLeftClickCallBack = ({ position, viewer }) => {
+  const scene = viewer.scene
+  const globe = scene.globe
+  const pickPositionSupported = scene.pickPositionSupported
+
+  let scenePickPosition
+  let globePickPosition
+  let pickPoint
+  let useScenePickHeight = false
+
+  if (!pickPositionSupported) {
+    return
+  }
+  scenePickPosition = scene.pickPosition(position) // may be undefined
+  const pickObject = scene.pick(position) // may be undefined
+  const ray = scene.camera.getPickRay(position)
+  if (pickObject) {
+    useScenePickHeight = true
+  }
+  if (ray) {
+    globePickPosition = globe.pick(ray, scene)
+  }
+
+  if (scenePickPosition) {
+    pickPoint = worldToDeg(scenePickPosition)
+    if (!useScenePickHeight && globePickPosition) {
+      pickPoint[2] = worldToDeg(globePickPosition)[2]
+    }
+  }
+  console.log(pickPoint)
 }
 
 export class Draw {
@@ -40,8 +69,9 @@ export class Draw {
   private handlerMap: Map<string, ScreenSpaceEventHandler> = new Map()
   private ui: Node
   private drawMode: DrawMode
-  private supportDepthPick: boolean
-  private supportTransparentPick: boolean
+  private cacheDepthTest: boolean
+
+  public drawData: any
 
   constructor(
     viewer: Viewer,
@@ -49,9 +79,11 @@ export class Draw {
     options?: PointSetupOption | LineSetupOption | PolygonSetupOption
   ) {
     this.viewer = viewer
-    this.supportDepthPick = viewer.scene.useDepthPicking
-    this.supportTransparentPick = viewer.scene.pickTranslucentDepth
     this.drawMode = drawMode
+    this.cacheDepthTest = viewer.scene.globe.depthTestAgainstTerrain
+
+    // force enable depth test for terrain
+    viewer.scene.globe.depthTestAgainstTerrain = true
 
     if (!options) {
       // TODO
@@ -64,7 +96,6 @@ export class Draw {
     containerDiv.appendChild(this.ui)
 
     // init event
-    // TODO 要判断深度拾取支持情况，拾取的功能要分支出去，优先顺序大致为 ScenePick > GlobePick > ...
     this.initEventHandler()
   }
 
@@ -81,12 +112,16 @@ export class Draw {
       return
     }
 
+    const viewer = this.viewer
+
     switch (this.drawMode) {
       case DrawMode.Point:
-        clickHandler.setInputAction(
-          leftClickCallback,
-          ScreenSpaceEventType.LEFT_CLICK
-        )
+        clickHandler.setInputAction(({ position }) => {
+          leftClickCallback({
+            position,
+            viewer
+          })
+        }, ScreenSpaceEventType.LEFT_CLICK)
         break
       case DrawMode.Line:
         break
@@ -105,5 +140,11 @@ export class Draw {
   set mode(value: DrawMode) {
     this.drawMode = value
     this.onModeChange()
+  }
+
+  destory() {
+    if (this.viewer) {
+      this.viewer.scene.globe.depthTestAgainstTerrain = this.cacheDepthTest
+    }
   }
 }

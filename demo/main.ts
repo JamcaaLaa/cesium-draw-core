@@ -39,10 +39,13 @@ const onContentLoaded = () => {
     }),
     msaaSamples: 2,
     selectionIndicator: false,
+    // terrainProvider: Cesium.createWorldTerrain(),
     contextOptions: {
       requestWebgl2: true
     }
   })
+
+  DEMO.viewer.scene.globe.depthTestAgainstTerrain = true
 
   return DEMO.viewer
 }

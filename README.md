@@ -23,6 +23,12 @@ new Draw(viewer, {
 })
 ```
 
+## 提高绘制结果数值精度的建议
+
+- 开启地形深度检测 `viewer.scene.globe.depthTestAgainstTerrain = true`
+- 尽量与拾取点（点击点）近一些（一两百米之内为佳）
+- 有条件的话，尽可能加载高精度的地形服务
+
 # 开发
 
 使用 TypeScript 开发。

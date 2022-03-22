@@ -1,4 +1,4 @@
-import { Cartesian2, Color } from 'cesium'
+import { Viewer, Cartesian2, Color } from 'cesium'
 
 export enum DrawMode {
   Point = 'Point',
@@ -14,4 +14,7 @@ export interface PointSetupOption {
 export interface LineSetupOption {}
 export interface PolygonSetupOption {}
 
-export type CesiumLeftClickCallBack = (evt: { position: Cartesian2 }) => void
+export type CesiumLeftClickCallBack = (params: {
+  position: Cartesian2
+  viewer: Viewer
+}) => void
