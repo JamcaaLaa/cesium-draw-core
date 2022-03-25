@@ -13,6 +13,12 @@ import filesize from 'rollup-plugin-filesize'
 
 const isMinifined = process.env.ismin === 'yes'
 
+/*
+ resolve 插件指的是你需要把 node_modules 中导入的资源（模块、文件等）一起打包进去；
+ 配置中的 external 数组是不打包的 pkg；
+ 若不使用 resolve 插件，默认全部忽略导入的资源
+ */
+
 const basePlugins: Plugin[] = [
   del({
     targets: 'dist/*',
